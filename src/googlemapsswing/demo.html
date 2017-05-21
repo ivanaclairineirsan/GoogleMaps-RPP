@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Java-Buddy: Google Maps</title>
+    <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <style>#mapcanvas { height: 400px; width: 100%}</style>
+
+</head>
+<body>
+<h1>Java-Buddy: Google Maps</h1>
+<div id="mapcanvas">
+    <script type="text/javascript">
+        document.map = new google.maps.Map(document.getElementById("mapcanvas"));
+        var latlng = new google.maps.LatLng(-6.883384, 107.619109);
+        var Options = {
+            zoom: 15,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("mapcanvas"), Options);
+//        var carMarkerImage = new google.maps.MarkerImage('resources/images/car.png');
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(-6.883384, 107.619109),
+            map: map,
+            draggable: true,
+//icon: carMarkerImage,
+            title: "",
+            autoPan: true
+        });
+        var infobulle = new google.maps.InfoWindow({
+            content: "ddddd"
+        });
+        google.maps.event.addListener(marker, 'mouseover', function() {
+            infobulle.open(map, marker);
+        });
+        google.maps.event.addListener(map, "click", function (e) {
+            //lat and lng is available in e object
+            var latLng = e.latLng;
+            alert("clicked, lat: " + e.latLng.lat() + ", long: " + e.latLng.long());
+        });
+        
+        document.goToLocation = function(x, y) {
+            alert("goToLocation, x: " + x +", y:" + y);
+            var latLng = new google.maps.LatLng(x, y);
+            marker.setPosition(latLng);
+            map.setCenter(latLng);
+            
+             var flightPlanCoordinates = [
+                {lat: -6.883384, lng: 107.619109},
+                {lat:-6.882256, lng:107.619212},
+                {lat: -6.883172, lng: 107.621422}
+              ];
+              var flightPath = new google.maps.Polyline({
+                path: flightPlanCoordinates,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+              });
+
+            flightPath.setMap(map);
+            
+            var geocoder =  new google.maps.Geocoder();
+            var latlng = {}
+            geocoder.geocode( { 'address': 'buah-batu'}, function(results, status) {
+                  if (status == google.maps.GeocoderStatus.OK) {
+                    alert("location : " + results[0].geometry.location.lat() + " " +results[0].geometry.location.lng());
+                    latlng = results[0].geometry.location
+                  } else {
+                    alert("Something got wrong " + status);
+                  }
+                });
+                
+//            var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+
+            var latlng = {lat: parseFloat(-6.9523899), lng: parseFloat(107.6511279)};
+            geocoder.geocode( { 'location': latlng}, function(results, status) {
+            alert('here')
+            if (status == google.maps.GeocoderStatus.OK) {
+              alert("Street Name : " + results[0].formatted_address); 
+            } else {
+              alert("Something got wrong " + status);
+            }
+            });
+        }
+        
+        document.searchPath = function(x,y) {
+            
+        }
+    </script>
+
+
+</div>
+</body>
+</html>
